@@ -1,36 +1,87 @@
+try_wrapper = """
+try:
+{0}
+except Exception as exception:
+    RET['code_result'] = type(exception).__name__
 """
-TESTS is a dict with all you tests.
-Keys for this will be categories' names.
-Each test is dict with
-    "input" -- input data for user function
-    "answer" -- your right answer
-    "explanation" -- not necessary key, it's using for additional info in animation.
+
+
+prepare = """
+if not "checkio" in USER_GLOBAL:
+    raise NotImplementedError("Where is checkio?")
+checkio = USER_GLOBAL['checkio']
 """
+
+run_test = """
+RET['code_result'] = ({0})"""
+
+import_re = """
+    import re
+"""
+import_math = """
+    import math
+"""
+
+
+non_list = "checkio({}) != []"
+hello_world = "checkio('Hello') < 'World'"
+eighty = "checkio(80) > 81"
+re_re = "checkio(re) >= re"
+re_math = "checkio(re) <= math"
+ord_5 = "checkio(5) == ord"
 
 
 TESTS = {
     "Basics": [
         {
-            "input": [3, 2],
-            "answer": 5,
-            "explanation": "3+2=?"
+            "test_code": {
+                "python-3": prepare + run_test.format(non_list),
+                "python-27": try_wrapper.format(prepare + run_test.format(non_list))
+            },
+            "show": {"python-3": non_list, "python-27": non_list},
+            "answer": True
         },
         {
-            "input": [5, 7],
-            "answer": 12,
-            "explanation": "5+7=?"
-        }
-    ],
-    "Extra": [
-        {
-            "input": [6, 3],
-            "answer": 9,
-            "explanation": "6+3=?"
+            "test_code": {
+                "python-3": try_wrapper.format(prepare + run_test.format(hello_world)),
+                "python-27": try_wrapper.format(prepare + run_test.format(hello_world))
+            },
+            "show": {"python-3": hello_world, "python-27": hello_world},
+            "answer": True
         },
         {
-            "input": [6, 7],
-            "answer": 13,
-            "explanation": "6+7=?"
-        }
+            "test_code": {
+                "python-3": try_wrapper.format(prepare + run_test.format(eighty)),
+                "python-27": try_wrapper.format(prepare + run_test.format(eighty))
+            },
+            "show": {"python-3": eighty, "python-27": eighty},
+            "answer": True
+        },
+        {
+            "test_code": {
+                "python-3": try_wrapper.format(prepare + import_re + run_test.format(re_re)),
+                "python-27": try_wrapper.format(prepare + import_re + run_test.format(re_re))
+            },
+            "show": {"python-3": re_re, "python-27": re_re},
+            "answer": True
+        },
+        {
+            "test_code": {
+                "python-3": try_wrapper.format(prepare + import_re + import_math + run_test.format(re_math)),
+                "python-27": try_wrapper.format(prepare + import_re + import_math + run_test.format(re_math))
+            },
+            "show": {"python-3": re_math, "python-27": re_math},
+            "answer": True
+        },
+        {
+            "test_code": {
+                "python-3": try_wrapper.format(prepare + run_test.format(ord_5)),
+                "python-27": try_wrapper.format(prepare + run_test.format(ord_5))
+            },
+            "show": {"python-3": ord_5, "python-27": ord_5},
+            "answer": True
+        },
+
+
     ]
 }
