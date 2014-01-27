@@ -41,8 +41,9 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
 
             var checkioInput = data.in;
 
+
             if (data.error) {
-                $content.find('.call').html('Fail: checkio(' + JSON.stringify(checkioInput) + ')');
+                $content.find('.call').html(checkioInput);
                 $content.find('.output').html(data.error.replace(/\n/g, ","));
 
                 $content.find('.output').addClass('error');
@@ -62,13 +63,12 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
             var runner = data.ext["runner"];
 
 
-            console.log(data.ext);
             //if you need additional info from tests (if exists)
             var explanation = data.ext["explanation"];
 
             $content.find('.output').html('&nbsp;Your result:&nbsp;' + JSON.stringify(result));
-
             $content.find('.call').html(test_code[runner]);
+
             if (!result) {
                 $content.find('.answer').html('Right result:&nbsp;' + JSON.stringify(rightResult));
                 $content.find('.answer').addClass('error');
