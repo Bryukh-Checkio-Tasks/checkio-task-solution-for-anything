@@ -12,14 +12,12 @@ import_re = """import re
 import_math = """import math
 """
 
-
 non_list = "checkio({}) != []"
 hello_world = "checkio('Hello') < 'World'"
 eighty = "checkio(80) > 81"
 re_re = "checkio(re) >= re"
 re_math = "checkio(re) <= math"
 ord_5 = "checkio(5) == ord"
-
 
 TESTS = {
     "1. Basics": [
