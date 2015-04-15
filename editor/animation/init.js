@@ -1,6 +1,7 @@
+
 //Dont change it
-requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
-    function (ext, $, TableComponent) {
+requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
+    function (ext, $, Raphael, Snap) {
 
         var cur_slide = {};
 
@@ -8,7 +9,9 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
         });
 
         ext.set_process_in(function (this_e, data) {
+            cur_slide = {};
             cur_slide["in"] = data[0];
+            this_e.addAnimationSlide(cur_slide);
         });
 
         ext.set_process_out(function (this_e, data) {
@@ -17,8 +20,6 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
 
         ext.set_process_ext(function (this_e, data) {
             cur_slide.ext = data;
-            this_e.addAnimationSlide(cur_slide);
-            cur_slide = {};
         });
 
         ext.set_process_err(function (this_e, data) {
@@ -39,46 +40,71 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
                 return false;
             }
 
-            var checkioInput = data.in;
+            //YOUR FUNCTION NAME
+            var fname = 'checkio';
 
+            var checkioInput = data.in || 0;
+            var checkioInputStr = fname + '(' + JSON.stringify(checkioInput) + ')';
 
-            if (data.error) {
-                $content.find('.call').html(checkioInput);
-                $content.find('.output').html(data.error.replace(/\n/g, ","));
+            var failError = function (dError) {
+                $content.find('.call').html(checkioInputStr);
+                $content.find('.output').html(dError.replace(/\n/g, ","));
 
                 $content.find('.output').addClass('error');
                 $content.find('.call').addClass('error');
                 $content.find('.answer').remove();
                 $content.find('.explanation').remove();
                 this_e.setAnimationHeight($content.height() + 60);
+            };
+
+            if (data.error) {
+                failError(data.error);
                 return false;
             }
 
-            var rightResult = data.ext["answer"];
-            var userResult = data.out;
+            if (data.ext && data.ext.inspector_fail) {
+                failError(data.ext.inspector_result_addon);
+                return false;
+            }
 
-            var result = data.ext["code_result"];
-            var result_addon = data.ext["result_addon"];
-            var test_code = data.ext["show"];
-            var runner = data.ext["runner"];
+            $content.find('.call').html(checkioInputStr);
+            $content.find('.output').html('Working...');
 
 
-            //if you need additional info from tests (if exists)
-            var explanation = data.ext["explanation"];
+            if (data.ext) {
+                var rightResult = data.ext["answer"];
+                var userResult = data.out;
+                var result = data.ext["result"];
+                var result_addon = data.ext["result_addon"];
+                var test_code = data.ext["show"];
+                var runner = data.ext["runner"];
 
-            $content.find('.output').html('&nbsp;Comparison result:&nbsp;' + JSON.stringify(result));
-            $content.find('.call').html(test_code[runner]);
 
-            if (!result) {
-                $content.find('.answer').html('Right result:&nbsp;' + JSON.stringify(rightResult));
-                $content.find('.answer').addClass('error');
-                $content.find('.output').addClass('error');
-                $content.find('.call').addClass('error');
+
+
+
+
+                //if you need additional info from tests (if exists)
+                var explanation = data.ext["explanation"];
+
+                $content.find('.output').html('&nbsp;Comparison result:&nbsp;' + JSON.stringify(result));
+                $content.find('.call').html(test_code[runner]);
+
+
+                if (!result) {
+                    $content.find('.answer').html('Right result:&nbsp;' + JSON.stringify(rightResult));
+                    $content.find('.answer').addClass('error');
+                    $content.find('.output').addClass('error');
+                    $content.find('.call').addClass('error');
+                }
+                else {
+                    $content.find('.answer').remove();
+                }
             }
             else {
                 $content.find('.answer').remove();
             }
-            //Dont change the code before it
+
 
             //Your code here about test explanation animation
             //$content.find(".explanation").html("Something text for example");
@@ -104,27 +130,35 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
 //            $tryit.find('.bn-check').click(function (e) {
 //                e.preventDefault();
 //                this_e.sendToConsoleCheckiO("something");
-//                e.stopPropagation();
-//                return false;
 //            });
 //        });
 
-        var colorOrange4 = "#F0801A";
-        var colorOrange3 = "#FA8F00";
-        var colorOrange2 = "#FAA600";
-        var colorOrange1 = "#FABA00";
 
-        var colorBlue4 = "#294270";
-        var colorBlue3 = "#006CA9";
-        var colorBlue2 = "#65A1CF";
-        var colorBlue1 = "#8FC7ED";
+        function SVG(dom) {
+            var colorOrange4 = "#a83901";
+            var colorOrange3 = "#ca4701";
+            var colorOrange2 = "#fa5e09";
+            var colorOrange1 = "#Ff935b";
 
-        var colorGrey4 = "#737370";
-        var colorGrey3 = "#9D9E9E";
-        var colorGrey2 = "#C5C6C6";
-        var colorGrey1 = "#EBEDED";
+            var colorBlue4 = "#115d81";
+            var colorBlue3 = "#2b95c5";
+            var colorBlue2 = "#9ad0ec";
+            var colorBlue1 = "#dceaf1";
 
-        var colorWhite = "#FFFFFF";
+            var colorGrey4 = "#000000";
+            var colorGrey3 = "#373737";
+            var colorGrey2 = "#7e7e7e";
+            var colorGrey1 = "#cecece";
+
+            var colorWhite = "#FFFFFF";
+
+            var paper;
+
+            this.draw = function() {};
+
+            this.animate = function(){};
+        }
+
         //Your Additional functions or objects inside scope
         //
         //
