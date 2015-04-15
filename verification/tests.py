@@ -4,7 +4,7 @@ if not "checkio" in USER_GLOBAL:
 checkio = USER_GLOBAL['checkio']
 """
 
-run_test = """RET['code_result'] = ({0})
+run_test = """RET['code_result'] = bool({0})
 """
 
 import_re = """import re
