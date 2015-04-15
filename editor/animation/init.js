@@ -66,7 +66,7 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210'],
             //if you need additional info from tests (if exists)
             var explanation = data.ext["explanation"];
 
-            $content.find('.output').html('&nbsp;Your result:&nbsp;' + JSON.stringify(result));
+            $content.find('.output').html('&nbsp;Comparison result:&nbsp;' + JSON.stringify(result));
             $content.find('.call').html(test_code[runner]);
 
             if (!result) {
