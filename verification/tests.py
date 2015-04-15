@@ -12,6 +12,7 @@ import_re = """import re
 import_math = """import math
 """
 
+it_true = "checkio({1, 2, 3}) == {1, 2, 3}"
 non_list = "checkio({}) != []"
 hello_world = "checkio('Hello') < 'World'"
 eighty = "checkio(80) > 81"
@@ -53,6 +54,15 @@ TESTS = {
             "show": {"python-3": ord_5, "python-27": ord_5},
             "answer": True
         },
+        {
+            "test_code": {
+                "python-3": prepare + run_test.format(it_true),
+                "python-27": prepare + run_test.format(it_true)
+            },
+            "show": {"python-3": it_true, "python-27": it_true},
+            "answer": True
+        },
+
 
 
     ],
